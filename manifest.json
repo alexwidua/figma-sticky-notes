@@ -1,0 +1,7 @@
+{
+	"name": "Sticky Notes",
+	"id": "901482830211374036",
+	"api": "1.0.0",
+	"main": "build/main.js",
+	"ui": "build/ui.html"
+}
