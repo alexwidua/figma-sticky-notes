@@ -54,10 +54,16 @@ figma.ui.onmessage = async (msg) => {
 		text.x = padding / 2
 		text.y = padding / 2
 		text.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }]
-		text.characters = msg.content
 		text.fontSize = msg.fontSize
 		text.textAlignHorizontal = 'CENTER'
 		text.textAlignVertical = 'CENTER'
+
+		if (msg.content) {
+			text.characters = msg.content
+		} else {
+			text.characters = 'Text'
+		}
+
 		nodes.push(text)
 
 		// Group nodes together
