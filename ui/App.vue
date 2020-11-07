@@ -6,7 +6,7 @@
     >
       <p
         contenteditable
-        id="noteContent"
+        id="note-content"
         ref="noteContent"
         @input="onInput"
         :style="`font-size: ${this.calcFontSize}px`"
@@ -15,12 +15,12 @@
     <div class="flex row align-items-center justify-content-between m-xxsmall">
       <div id="colors">
         <button
+          v-for="(color, i) in backgroundColors"
+          :key="i"
           class="color"
           :class="{ 'color--selected': currBackgroundIndex == i }"
           :style="`background: ${backgroundColors[i]}`"
           @click="setBackground(i)"
-          v-for="(color, i) in backgroundColors"
-          :key="i"
         />
       </div>
       <div class="flex">
@@ -52,7 +52,7 @@ export default Vue.extend({
     };
   },
   methods: {
-    // Handle input. V-model binding not supported with contenteditable
+    // handle input. V-model binding not supported with contenteditable
     onInput(event: MouseEvent): void {
       const target = event.target as HTMLElement;
       if (event.target !== null) {
@@ -62,11 +62,12 @@ export default Vue.extend({
     setBackground(color: number): void {
       this.currBackgroundIndex = color;
     },
-    createNote(): void {
+    createNote(event: MouseEvent): void {
       const content = this.text;
       // 1.3 is the scale difference between plugin ui -> figma canvas.
       const fontSize = this.calcFontSize / 1.3;
       const background = this.backgroundColors[this.currBackgroundIndex];
+      const cursorPosition = { x: event.screenX - 200, y: event.screenY - 300 };
 
       parent.postMessage(
         {
@@ -74,12 +75,13 @@ export default Vue.extend({
             type: 'create-note',
             content,
             fontSize,
-            background
+            background,
+            cursorPosition
           }
         },
         '*'
       );
-      // Remove content and reset to placeholder
+      // remove content and reset to placeholder
       (this.$refs.noteContent as HTMLInputElement).innerHTML = '';
       this.text = '';
     },
@@ -93,7 +95,7 @@ export default Vue.extend({
         '*'
       );
     },
-    // Event handlers
+    // event handlers
     handlePaste(event: ClipboardEvent) {
       event.preventDefault();
       event.stopPropagation();
@@ -143,16 +145,15 @@ export default Vue.extend({
   text-align: center;
   background: #eee;
   position: relative;
-  //border: 1px solid #eee;
   transition: background-color 0.2s;
 
-  &Content {
+  &-content {
     width: calc(100vw - 64px);
   }
 }
 
+// note textarea
 [contenteditable] {
-  outline: 2px solid #18a0fb;
   cursor: default;
 
   &:hover {
@@ -161,21 +162,21 @@ export default Vue.extend({
   }
 
   &:focus {
+    outline: 2px solid #18a0fb;
     text-decoration: none;
   }
 }
 
-/* Display content placeholder when content is empty */
+// display content placeholder when content is empty
 [contentEditable='true']:empty:not(:focus):before {
   content: 'Text';
   color: rgba(0, 0, 0, 0.5);
   font-style: italic;
   font-weight: 300;
-  pointer-events: none; /* Prevent placeholder from blocking @click */
+  pointer-events: none; // prevent placeholder from blocking @click
 }
 
-/* UI */
-
+// misc
 .color {
   min-width: 28px;
   height: 28px;
@@ -188,7 +189,7 @@ export default Vue.extend({
     margin-right: var(--size-xxxsmall);
   }
 
-  /* Modifiers */
+  // modifiers
   &--selected {
     box-shadow: inset 0 0 0 2px #18a0fb !important;
   }

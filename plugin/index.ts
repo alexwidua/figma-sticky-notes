@@ -1,13 +1,16 @@
-import { hexToGl, randomCoord } from './helpers/utils';
+import { hexToGl } from './helpers/utils';
+
+function handleError() {
+  figma.notify('Oops, could not load all fonts. Plugin cancelled.');
+  figma.closePlugin();
+}
+
+// plugin
 
 figma.showUI(__html__);
 figma.ui.resize(300, 300);
 
-function handleError() {
-  figma.notify('Oops, could not load fonts. Plugin cancelled.');
-  figma.closePlugin();
-}
-
+// load fonts
 figma
   .listAvailableFontsAsync()
   .then(() => {
@@ -15,27 +18,31 @@ figma
   })
   .catch(() => handleError());
 
-// Plugin main
 figma.ui.onmessage = async msg => {
   if (msg.type === 'create-note') {
     const nodes = [];
-    const width = 200;
-    const height = 200;
-    const shadowWidth = 170;
-    const shadowHeight = 30;
-    const padding = 32;
+    const viewportZoom = figma.viewport.zoom > 20 ? 20 : figma.viewport.zoom;
+    const width = 200 / viewportZoom;
+    const height = 200 / viewportZoom;
+    const shadowWidth = 170 / viewportZoom;
+    const shadowHeight = 30 / viewportZoom;
+    const padding = 32 / viewportZoom;
 
-    // Create sticky note shadow
+    // create shadow
     const shadow = figma.createEllipse();
     shadow.name = 'Shadow';
     shadow.resizeWithoutConstraints(shadowWidth, shadowHeight);
     shadow.x = (width - shadowWidth) / 2;
-    shadow.y = height - shadowHeight;
+    shadow.y = height - height / 12;
     shadow.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }];
-    shadow.effects = [{ type: 'LAYER_BLUR', radius: 20, visible: true }];
+    shadow.opacity = 0.5;
+    shadow.locked = true;
+    shadow.effects = [
+      { type: 'LAYER_BLUR', radius: 20 / viewportZoom, visible: true }
+    ];
     nodes.push(shadow);
 
-    // Create actual sticky note
+    // create sticky note container
     const note = figma.createRectangle();
     note.name = 'Note';
     note.resizeWithoutConstraints(width, height);
@@ -50,14 +57,14 @@ figma.ui.onmessage = async msg => {
         type: 'DROP_SHADOW',
         color: { r: 0, g: 0, b: 0, a: 0.25 },
         blendMode: 'NORMAL',
-        offset: { x: 0, y: 5 },
-        radius: 5,
+        offset: { x: 0, y: 5 / viewportZoom },
+        radius: 5 / viewportZoom,
         visible: true
       }
     ];
     nodes.push(note);
 
-    // Create sticky note content
+    // create sticky note content
     const text = figma.createText();
     note.name = 'Content';
     text.resizeWithoutConstraints(width - padding, height - padding);
@@ -65,10 +72,11 @@ figma.ui.onmessage = async msg => {
     text.y = padding / 2;
     text.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }];
     text.fontName = { family: 'Roboto', style: 'Regular' };
-    text.fontSize = msg.fontSize;
+    text.fontSize = msg.fontSize / viewportZoom;
     text.textAlignHorizontal = 'CENTER';
     text.textAlignVertical = 'CENTER';
 
+    // deal with empty note
     if (msg.content) {
       text.characters = msg.content;
     } else {
@@ -77,13 +85,15 @@ figma.ui.onmessage = async msg => {
 
     nodes.push(text);
 
-    // Group nodes together
+    // group nodes together
     const stickyNote = figma.group(nodes, figma.currentPage);
     stickyNote.name = 'Sticky Note';
 
-    // Position sticky notes in center of viewport + add a small random spread
-    stickyNote.x = figma.viewport.center.x - width / 2 + randomCoord(100);
-    stickyNote.y = figma.viewport.center.y - height / 2 + randomCoord(100);
+    // position sticky notes next to plugin window (estimated)
+    stickyNote.x =
+      figma.viewport.bounds.x + msg.cursorPosition.x / viewportZoom;
+    stickyNote.y =
+      figma.viewport.bounds.y + msg.cursorPosition.y / viewportZoom;
 
     figma.currentPage.appendChild(stickyNote);
   }
