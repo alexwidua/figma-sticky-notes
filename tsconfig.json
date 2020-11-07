@@ -1,6 +1,30 @@
 {
-	"compilerOptions": {
-		"target": "es6",
-		"moduleResolution": "node"
-	}
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": ["webpack-env", "./figma"],
+    "paths": {
+      "@/*": ["ui/*"]
+    },
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+  },
+  "include": [
+    "ui/**/*.ts",
+    "ui/**/*.tsx",
+    "ui/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "plugin/**/*.ts",
+    "shims-tsx.d.ts"
+  ],
+  "exclude": ["node_modules"]
 }

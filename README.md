@@ -1,6 +1,6 @@
 <p align="center"><img align="center" src="misc/banner.png"/></p>
 
-A Miro-inspired sticky notes tool for Figma using a Vue frontend and webpack as a bundler.
+A simple sticky notes tool for Figma. Features a Vue frontend and TypeScript.
 
 ## ✨ Usage
 
@@ -10,7 +10,7 @@ A Miro-inspired sticky notes tool for Figma using a Vue frontend and webpack as 
 ## 🔧 Development
 
 1. `npm install` — Install dependencies
-1. `npm run watch` — Build the plugin for development 🚧
+1. `npm run serve` — Build & serve the plugin for development 🚧
 1. `npm run build` — Bundle the plugin for production 🚀
 
 ## 💭 Motivation
