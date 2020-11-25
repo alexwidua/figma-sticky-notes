@@ -1,20 +1,20 @@
 <template>
-  <div id="_wrapper">
+  <div class="wrapper">
     <div
-      id="note"
+      class="note"
       :style="`background: ${backgroundColors[currBackgroundIndex]}`"
     >
       <p
         contenteditable
-        id="note-content"
+        class="note-content"
         ref="noteContent"
         @input="onInput"
         :style="`font-size: ${this.calcFontSize}px`"
       ></p>
     </div>
     <div class="flex row align-items-center justify-content-between m-xxsmall">
-      <div id="colors">
-        <button
+      <div class="flex row align-items-center">
+        <div
           v-for="(color, i) in backgroundColors"
           :key="i"
           class="color"
@@ -23,17 +23,10 @@
           @click="setBackground(i)"
         />
       </div>
-      <div class="flex">
-        <button
-          class="button button--secondary"
-          @click="cancelApp"
-          v-html="'Cancel'"
-        />
-        <button
-          class="button button--primary ml-xxsmall"
-          @click="createNote"
-          v-html="'Add'"
-        />
+      <div class="flex ml-xxsmall" style="width: 100%">
+        <FigButton style="width: 100%" primary v-on:click="createNote">
+          Add
+        </FigButton>
       </div>
     </div>
   </div>
@@ -41,6 +34,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { FigButton } from 'figma-plugin-ds-vue';
 
 export default Vue.extend({
   name: 'App',
@@ -51,8 +45,11 @@ export default Vue.extend({
       backgroundColors: ['#7BDBFF', '#FF9083', '#CFA8FF', '#5CE3B1']
     };
   },
+  components: {
+    FigButton
+  },
   methods: {
-    // handle input. V-model binding not supported with contenteditable
+    // handle input. v-model binding not supported with contenteditable
     onInput(event: MouseEvent): void {
       const target = event.target as HTMLElement;
       if (event.target !== null) {
@@ -62,21 +59,18 @@ export default Vue.extend({
     setBackground(color: number): void {
       this.currBackgroundIndex = color;
     },
-    createNote(event: MouseEvent): void {
+    createNote(): void {
       const content = this.text;
-      // 1.3 is the scale difference between plugin ui -> figma canvas.
+      // 1.3 is the scale difference between plugin ui -> figma canvas
       const fontSize = this.calcFontSize / 1.3;
       const background = this.backgroundColors[this.currBackgroundIndex];
-      const cursorPosition = { x: event.screenX - 200, y: event.screenY - 300 };
-
       parent.postMessage(
         {
           pluginMessage: {
             type: 'create-note',
             content,
             fontSize,
-            background,
-            cursorPosition
+            background
           }
         },
         '*'
@@ -111,7 +105,7 @@ export default Vue.extend({
   },
   computed: {
     calcFontSize(): number {
-      const fontSize = 42;
+      const fontSize = 38;
       return Math.round(fontSize - this.text.length * 0.15); // 0.15 works good
     }
   },
@@ -129,13 +123,13 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-#_wrapper {
+.wrapper {
   width: 300px;
   height: 300px;
   margin: 0 auto;
 }
 
-#note {
+.note {
   width: 100%;
   height: 252px;
   margin: 0 auto;
@@ -146,6 +140,7 @@ export default Vue.extend({
   background: #eee;
   position: relative;
   transition: background-color 0.2s;
+  overflow: hidden;
 
   &-content {
     width: calc(100vw - 64px);
@@ -178,6 +173,7 @@ export default Vue.extend({
 
 // misc
 .color {
+  display: inline-block;
   min-width: 28px;
   height: 28px;
   outline: none;
