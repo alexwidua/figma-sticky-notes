@@ -6,7 +6,6 @@ function handleError() {
 }
 
 // plugin
-
 figma.showUI(__html__);
 figma.ui.resize(300, 300);
 
@@ -89,11 +88,9 @@ figma.ui.onmessage = async msg => {
     const stickyNote = figma.group(nodes, figma.currentPage);
     stickyNote.name = 'Sticky Note';
 
-    // position sticky notes next to plugin window (estimated)
-    stickyNote.x =
-      figma.viewport.bounds.x + msg.cursorPosition.x / viewportZoom;
-    stickyNote.y =
-      figma.viewport.bounds.y + msg.cursorPosition.y / viewportZoom;
+    // Position sticky notes in center of viewport + add a small random spread
+    stickyNote.x = figma.viewport.center.x - width / 2;
+    stickyNote.y = figma.viewport.center.y - height / 2;
 
     figma.currentPage.appendChild(stickyNote);
   }
