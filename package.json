@@ -1,7 +1,7 @@
 {
   "name": "figma-sticky-notes",
   "description": "Simple sticky notes plugin for Figma.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -11,6 +11,7 @@
   "dependencies": {
     "chroma-js": "^2.1.0",
     "core-js": "^3.6.5",
+    "figma-plugin-ds-vue": "^1.1.6",
     "html-webpack-inline-source-plugin": "0.0.10",
     "html-webpack-plugin": "^3.2.0",
     "vue": "^2.6.11"
