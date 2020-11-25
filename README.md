@@ -1,6 +1,6 @@
 <img src="misc/sticky-notes.gif" width="100%" max-width="600px"/>
 
-A simple sticky notes tool for Figma. Features a Vue frontend and Typescript.
+A simple sticky notes tool for Figma.
 
 [<img src="misc/button.svg">](https://www.figma.com/community/plugin/901482830211374036/Sticky-Notes)
 
@@ -9,7 +9,7 @@ A simple sticky notes tool for Figma. Features a Vue frontend and Typescript.
 1. Go to _Plugins > Sticky Notes_
 1. Enter some text 📜
 1. Choose a color 🎨
-1. 🟦🖐️
+1. ✨📝
 
 ## 🔧 Development
 
@@ -20,10 +20,6 @@ A simple sticky notes tool for Figma. Features a Vue frontend and Typescript.
 ## 💭 Motivation
 
 This micro plugin is a small coffee break project to take a peek into Figma plugin development. In our team we were sometimes missing sticky notes to annotate things when presenting a canvas. Since the commenting feature wasn't visual enough and duplicating the same sticky note template across projects was annoying -- I've created this small plugin.
-
-## 🌀 Misc
-
-This plugin has modified [figma-plugin-ds](https://github.com/thomas-lowry/figma-plugin-ds) stylesheets included.
 
 ## 📝 License
 
