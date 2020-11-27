@@ -1,4 +1,4 @@
-<img src="misc/sticky-notes.gif" width="100%" max-width="600px"/>
+<img src="misc/sticky-notes.png" width="100%" max-width="600px"/>
 
 A simple sticky notes tool for Figma.
 
