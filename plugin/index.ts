@@ -35,7 +35,6 @@ figma.ui.onmessage = async msg => {
     shadow.y = height - height / 12;
     shadow.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }];
     shadow.opacity = 0.5;
-    shadow.locked = true;
     shadow.effects = [
       { type: 'LAYER_BLUR', radius: 20 / viewportZoom, visible: true }
     ];
@@ -43,7 +42,7 @@ figma.ui.onmessage = async msg => {
 
     // create sticky note container
     const note = figma.createRectangle();
-    note.name = 'Note';
+    note.name = 'Background';
     note.resizeWithoutConstraints(width, height);
     note.fills = [
       {
@@ -65,7 +64,6 @@ figma.ui.onmessage = async msg => {
 
     // create sticky note content
     const text = figma.createText();
-    note.name = 'Content';
     text.resizeWithoutConstraints(width - padding, height - padding);
     text.x = padding / 2;
     text.y = padding / 2;
